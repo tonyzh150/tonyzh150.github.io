@@ -91,11 +91,110 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        
+        <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p><strong>这里是CUT&amp;Tag Tutorial的Tutorial，本教程旨在帮助对计算机知识不太熟悉的同学们理解并掌握CUT&amp;Tag技术。通过详细的步骤说明和实际操作示例，我们希望能够让每一位读者顺利完成这一实验，并且在过程中提高对相关工具和命令行操作的熟悉度。本教程不仅涵盖了基本的实验步骤，还包括了常见问题的解决方法和实际操作中的注意事项。希望通过本教程，大家可以自信地应用CUT&amp;Tag技术进行实验研究。</strong><br><em>使用过程中结合tutorial一起看，哪里不懂就找对应的区域</em></p>
+<ul>
+<li><strong>RStudio与Conda要使用到的包</strong><ul>
+<li>R<br>library(dplyr)<br>library(ggplot2)<br>library(ggpubr)<br>library(viridis)<br>library(GenomicRanges)<br>library(chromVAR) <!--这个后面用到的时候会细说--></li>
+<li>Conda<br><em>conda的包不需要提前下载，后续用到哪个下载哪个就好</em><br>Bowtie2 (version &gt;&#x3D; 2.3.4.3)<br>samtools (version &gt;&#x3D; 1.10)<br>bedtools (version &gt;&#x3D; 2.29.1)<br>Picard (version &gt;&#x3D; 2.18.29) <!--最新picard识别不了数据, 具体下面说--><br>SEACR (version &gt;&#x3D; 1.3)<br>deepTools (version &gt;&#x3D; 2.0) <!--deepTools内function也有问题, 下面说--></li>
+</ul>
+</li>
+</ul>
+<h1 id="前期工作"><a href="#前期工作" class="headerlink" title="前期工作 "></a>前期工作 <!--下面正式进入教程--></h1><ul>
+<li><p><strong>$projPath</strong><br>$projPath作为一个”快捷方式“会在整个tutorial内高频率使用。如tutorial内所示，projPath是path to data and results，为防止找不到需要的数据的情况发生，建议大家在个人目录下也就是在 <code>～/</code> 下创建一个目录专门保存所有需要的数据<br> <code>mkdir -p ～/cuttag_project</code><br>接下来，有了存储数据和结果的地方之后就可以将该路径赋予给projPath</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd cuttag_project //进入该目录</span><br><span class="line">pwd //获取该目录路径</span><br><span class="line">projPath=&quot;/Users/tonyzh/cuttag_project&quot; //双引号内放上面返还的路径，</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>Conda</strong><br><em>连接学校集群的同学可以只做初始化那一步</em></p>
+<ul>
+<li><strong>下载miniconda3</strong><br><a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/#quick-command-line-install">https://docs.anaconda.com/miniconda/#quick-command-line-install</a><br>此链接通过命令行下载，将页面拉到最下面，选择你的操作系统，再将提供的几行代码复制到终端里</li>
+<li><strong>初始化</strong><br>网站为两个Shell提供了初始化方法，可以通过 <code>echo $SHELL</code> 来确认自己的Shell，再选择你的shell的初始化代码，后通过<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">source ~/.zshrc</span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+来更新Shell完成初始化</li>
+<li><strong>下载并配置Conda</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda install conda // 下载conda</span><br><span class="line">conda --version //可以通过这一步判断conda是否正确安装，如果报错回看上一步初始化</span><br><span class="line">conda config --show channels //目前channels只有一个base，是默认channel，需要添加两个</span><br><span class="line">conda config --append channels conda-forge //添加一个conda-forge channel</span><br><span class="line">conda config --append channels bioconda //添加一个bioconda channel</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>导入data</strong><br>可以看到教程内一共有六组数据，分别是H3K27me3的rep1rep2，H3K4me3的rep1rep2，和IgG的rep1rep2。 教程里面只提供了IgG_rep2的command line下载方法，其他数据需要<br><a target="_blank" rel="noopener" href="https://www.ebi.ac.uk/ena/browser/home">https://www.ebi.ac.uk/ena/browser/home</a><br>进入该网址，在Enter accession处复制粘贴SRA entry：SRX########<br>往下翻可以看到下载数据的位置，有两种选择，通过<code>wget</code>或者直接<code>浏览器</code>下载。<br>首先需要创建存储数据的目录，将六组数据分别存储</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/cuttag_project/data/IgG_rep2</span><br><span class="line">mkdir -p ~/cuttag_project/data/IgG_rep1</span><br><span class="line">mkdir -p ~/cuttag_project/data/K27me3_rep2</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Chrome：直接下载就好</li>
+<li>Wget: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O $projPath/data/dataName_rep#/dataName_rep#_R#.fastq.gz ftp://#links below#</span><br></pre></td></tr></table></figure>
+<em>实际的操作其实是下载TSV格式的download report再通过report内提供的链接wget，为提高效率我将所有链接都贴在下面了，可以直接使用</em><br><strong>K27me3_rep1: SRX8754646</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR122/017/SRR12246717/SRR12246717_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR122/017/SRR12246717/SRR12246717_2.fastq.gz</span><br></pre></td></tr></table></figure>
+<strong>K27me3_rep2: SRX7713678</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/040/SRR11074240/SRR11074240_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/040/SRR11074240/SRR11074240_2.fastq.gz</span><br></pre></td></tr></table></figure>
+<strong>K4me3_rep1: SRX7713692</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/054/SRR11074254/SRR11074254_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/054/SRR11074254/SRR11074254_2.fastq.gz</span><br></pre></td></tr></table></figure>
+<strong>K4me3_rep2: SRX7713696</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/058/SRR11074258/SRR11074258_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/058/SRR11074258/SRR11074258_2.fastq.gz</span><br></pre></td></tr></table></figure>
+<strong>IgG_rep1: SRX8468909</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/024/SRR11923224/SRR11923224_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/024/SRR11923224/SRR11923224_2.fastq.gz</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h1 id="II-Data-Pre-processing"><a href="#II-Data-Pre-processing" class="headerlink" title="II. Data Pre-processing"></a>II. Data Pre-processing</h1><ul>
+<li>$histName<br>还是要理解一下histName，histName在tutorial里的作用和projPath差不多，你需要创建你自己的histName，当然如果你非常清楚的知道你需要用的组蛋白是哪一个，也可以不去设置这个histName。只是tutorial需要这样一个变量去简化他整个教程的linux部分。</li>
+</ul>
+<p>  说完histName，我们先进行2.2. Merge technical replicates 那一步<br>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/fastq</span><br><span class="line">//cat将IgG_rep2_R1&amp;R2里的001&amp;002合并到一起</span><br><span class="line">cat ¥&#123;projPath&#125;/data/$&#123;histName&#125;/*_R1_*.fastq.gz &gt; $&#123;projPath&#125;/fastq/$&#123;histname&#125;_R1.fastq.gz</span><br><span class="line">cat ¥&#123;projPath&#125;/data/$&#123;histName&#125;/*_R2_*.fastq.gz &gt; $&#123;projPath&#125;/fastq/$&#123;histname&#125;_R2.fastq.gz</span><br><span class="line"></span><br><span class="line">//cp将data内储存的数据复制到fastq</span><br><span class="line">cp $&#123;projPath&#125;/data/$&#123;histName&#125;_rep1_R1.fastq.gz $&#123;projPath&#125;/fastq/$&#123;histName&#125;_rep1_R1.fastq.gz</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>再回到上面直接照抄  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">##== linux command ==##</span><br><span class="line">//2.1.1 Obatain FastQC</span><br><span class="line">mkdir -p $projPath/tools</span><br><span class="line">wget -P $projPath/tools https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip</span><br><span class="line">cd $projPath/tools</span><br><span class="line">unzip fastqc_v0.11.9.zip</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//2.2.2 Run FastQC for quality check</span><br><span class="line">mkdir -p $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125;</span><br><span class="line"></span><br><span class="line">$projPath/tools/FastQC/fastqc -o $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125; -f fastq $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz</span><br><span class="line">$projPath/tools/FastQC/fastqc -o $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125; -f fastq $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="III-Alignment"><a href="#III-Alignment" class="headerlink" title="III. Alignment"></a>III. Alignment</h1><h2 id="3-1-Bowtie2-alignment"><a href="#3-1-Bowtie2-alignment" class="headerlink" title="3.1. Bowtie2 alignment"></a>3.1. Bowtie2 alignment</h2><ul>
+<li><p>3.1.1</p>
+<ul>
+<li><p>先下载bowtie2<br><code>conda install -c bioconda bowtie2</code></p>
+</li>
+<li><p>先无视cores和ref，将四个目录建好，设好projPath的前提下照抄就行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/alignment/sam/bowtie2_summary</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bam</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bed</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bedgraph</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>bowtie2-build<br><em>“bowtie2-build builds a Bowtie index from a set of DNA sequences. bowtie2-buildoutputs a set of 6 files with suffixes .1.bt2, .2.bt2, .3.bt2, .4.bt2, .rev.1.bt2, and .rev.2.bt2. In the case of a large index these suffixes will have a bt2ltermination. These files together constitute the index: they are all that is needed to align reads to that reference. The original sequence FASTA files are no longer used by Bowtie 2 once the index is built.”</em></p>
+</li>
+<li><p>创建一个bowtie2Index目录以存放bowtie index<br><code>mkdir -p $&#123;projPath&#125;/bowtie2Index</code></p>
+</li>
+<li><p>下载hg38.fa<br><code>wget -P $projPath https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.fa.gz</code></p>
+</li>
+<li><p>bowtie2-build<br><code>bowite2-build $&#123;projPath&#125;/hg38.fa $&#123;projPath&#125;/bowtie2Index/hg38</code></p>
+<p><em>会比较慢，结束之后可以在bowtie2Index目录里看到6个以hg38开头的文件</em></p>
+</li>
+<li><p>设置cores&amp;ref<br><code>cores=8</code><br><code>ref=&quot;/Users/tonyzh/cuttag_project/bowtie2Index/hg38</code> &#x2F;&#x2F;你自己的路径</p>
+<p><em>需要说一下，因为我们一共有6个hg38文件供bowtie2识别，bowtie2的一个参数 <code>-x &lt;bt2-idx&gt;</code> 可以识别全部，而我们只需要把hg38（也就是bowtie2-build的文件的base name）放在 <code>-x</code> 后面就可以让bowtie2识别全部6个文件</em></p>
+</li>
+<li><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bowtie2 --end-to-end --very-sensitive --no-mixed --no-discordant --phred33 -I 10 -X 700 -p $&#123;cores&#125; -x $&#123;ref&#125; -1 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz -2 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz -S $&#123;projPath&#125;/alignment/sam/$&#123;histName&#125;_bowtie2.sam &amp;&gt; $&#123;projPath&#125;/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2.txt</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>3.1.2</p>
+<ul>
+<li><p>下载E.Coli<br><a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_002853715.1/">https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_002853715.1&#x2F;</a><br>下载.Fasta，可以下载到cuttag_project里</p>
+</li>
+<li><p>bowtie2-build E.Coli<br>  <code>bowtie2-build $&#123;projpath&#125;/ecoli.fa $&#123;projPath&#125;/bowtie2Index/ecoli</code></p>
+</li>
+<li><p>下载chromSize<br><code>wget -P $projPath/hg38.chrom.sizes https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.chrom.sizes</code></p>
+</li>
+<li><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bowtie2 --end-to-end --very-sensitive --no-mixed --no-discordant --phred33 -I 10 -X 700 -p $&#123;cores&#125; -x $&#123;spikeInRef&#125; -1 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz -2 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz -S $projPath/alignment/sam/$&#123;histName&#125;_bowtie2_spikeIn.sam &amp;&gt; $projPath/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2_spikeIn.txt</span><br></pre></td></tr></table></figure></li>
+<li><p>seqDepth<br>需要将每个数据的seqDepth都存储下来以供后续使用<br><em>所以建议全部数据都先跑一遍上一步，再跑这一步</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">seqDepthDouble=`samtools view -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2_spikeIn.sam | wc -l`</span><br><span class="line"></span><br><span class="line">seqDepth=$((seqDepthDouble/2))</span><br><span class="line">echo $seqDepth &gt;$projPath/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2_spikeIn.seqDepth</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="3-2-Report-sequencing-mapping-summary"><a href="#3-2-Report-sequencing-mapping-summary" class="headerlink" title="3.2 Report sequencing mapping summary"></a>3.2 Report sequencing mapping summary</h2><ul>
+<li>3.2.1<br>R Commands就不放进来了，没啥好说的，直接复制就行<br>但是刚起步有一点需要注意，在设置路径，数组的时候需要用你的路径，你的数据的名称</li>
+</ul>
+<h2 id="3-3-Remove-Duplicates"><a href="#3-3-Remove-Duplicates" class="headerlink" title="3.3. Remove Duplicates"></a>3.3. Remove Duplicates</h2><ul>
+<li>3.3.<ul>
+<li><p>下载picard<br>picard最新版本在识别数据的时候会报错，数据header识别不出来，所以下载cuttag最低可用版本的picard<br><code>conda install -c bioconda picard=&quot;2.18.29&quot;</code><br><code>picard --version</code> &#x2F;&#x2F;确认正确下载</p>
+</li>
+<li><p>设置picardCMD<br>首先查询picard.jar路径<br><code>find $(conda info --base) -name &quot;picard.jar&quot;</code><br>picardCMD&#x3D;”&#x2F;上述返还路径&#x2F;picard.jar”</p>
+</li>
+<li><p>继续</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/alignment/removeDuplicate/picard_summary</span><br><span class="line"></span><br><span class="line">// Sort by coordinate</span><br><span class="line">java -jar $picardCMD SortSam I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam O=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam SORT_ORDER=coordinate</span><br><span class="line"></span><br><span class="line">// Mark duplicates</span><br><span class="line">java -jar $picardCMD MarkDuplicates I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam O=$projPath/alignment/removeDuplicate/$&#123;histName&#125;_bowtie2.sorted.dupMarked.sam METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/$&#123;histName&#125;_picard.dupMark.txt</span><br><span class="line"></span><br><span class="line">// Remove duplicates</span><br><span class="line">java -jar picardCMD MarkDuplicates I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam O=$projPath/alignment/removeDuplicate/$&#123;histName&#125;_bowtie2.sorted.rmDup.sam REMOVE_DUPLICATES=true METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/$&#123;histName&#125;_picard.rmDup.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>R 绘图<br>跳过</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-4-Assess-mapped-fragment-size-distribution"><a href="#3-4-Assess-mapped-fragment-size-distribution" class="headerlink" title="3.4 Assess mapped fragment size distribution"></a>3.4 Assess mapped fragment size distribution</h2><ul>
+<li><h2 id="3-4-下载samtools-conda-install-c-bioconda-samtools-samtools-version-确认正确下载"><a href="#3-4-下载samtools-conda-install-c-bioconda-samtools-samtools-version-确认正确下载" class="headerlink" title="3.4.- 下载samtools  conda install -c bioconda samtools   samtools --version &#x2F;&#x2F; 确认正确下载
+  "></a>3.4.<br>- 下载samtools<br>  <code>conda install -c bioconda samtools </code><br>  <code>samtools --version</code> &#x2F;&#x2F; 确认正确下载
+  </h2></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/09/05/Cuttag-Tutorial-Tutorial/" data-id="cm0p394gu0000c0pfgbx68pr5" data-title="Cuttag Tutorial Tutorial" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/09/05/Cuttag-Tutorial-Tutorial/" data-id="cm0qcm5gn0000rjpf7h3ad681" data-title="Cuttag Tutorial Tutorial" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -146,7 +245,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/09/05/hello-world/" data-id="cm0p394gx0001c0pfcew4al1a" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/09/05/hello-world/" data-id="cm0qcm5gq0001rjpf44d53ghv" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
