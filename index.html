@@ -186,15 +186,19 @@
 </li>
 </ul>
 <h2 id="3-4-Assess-mapped-fragment-size-distribution"><a href="#3-4-Assess-mapped-fragment-size-distribution" class="headerlink" title="3.4 Assess mapped fragment size distribution"></a>3.4 Assess mapped fragment size distribution</h2><ul>
-<li><h2 id="3-4-下载samtools-conda-install-c-bioconda-samtools-samtools-version-确认正确下载"><a href="#3-4-下载samtools-conda-install-c-bioconda-samtools-samtools-version-确认正确下载" class="headerlink" title="3.4.- 下载samtools  conda install -c bioconda samtools   samtools --version &#x2F;&#x2F; 确认正确下载
-  "></a>3.4.<br>- 下载samtools<br>  <code>conda install -c bioconda samtools </code><br>  <code>samtools --version</code> &#x2F;&#x2F; 确认正确下载
-  </h2></li>
+<li>3.4.<ul>
+<li><p>下载samtools<br><code>conda install -c bioconda samtools </code><br><code>samtools --version</code> &#x2F;&#x2F; 确认正确下载</p>
+</li>
+<li><p>继续</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// Extract the 9th column from the alignment sam file which is the fragment length, 具体在abs($9)展现</span><br><span class="line">samtools view -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam | awk -F&#x27;\t&#x27; &#x27;function abs(x)&#123;return ((x &lt; 0.0) ? -x : x)&#125; &#123;print abs($9)&#125;&#x27; | sort | uniq -c | awk -v OFS=&quot;\t&quot; &#x27;&#123;print $2, $1/2&#125;&#x27; &gt;$projPath/alignment/sam/fragmentLen/$&#123;histName&#125;_fragmentLen.txt</span><br></pre></td></tr></table></figure></li>
 </ul>
-
+</li>
+</ul>
+<h1 id="IV-Alignment-results-filtering-and-file-format-conversion"><a href="#IV-Alignment-results-filtering-and-file-format-conversion" class="headerlink" title="IV. Alignment results filtering and file format conversion"></a>IV. Alignment results filtering and file format conversion</h1><h2 id="4-1-Filtering-mapped-reads-by-the-mapping-quality-filtering"><a href="#4-1-Filtering-mapped-reads-by-the-mapping-quality-filtering" class="headerlink" title="4.1 Filtering mapped reads by the mapping quality filtering"></a>4.1 Filtering mapped reads by the mapping quality filtering</h2>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/09/05/Cuttag-Tutorial-Tutorial/" data-id="cm0qcm5gn0000rjpf7h3ad681" data-title="Cuttag Tutorial Tutorial" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/09/05/Cuttag-Tutorial-Tutorial/" data-id="cm0qeosuc000093pf17euhpwa" data-title="Cuttag Tutorial Tutorial" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -245,7 +249,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/09/05/hello-world/" data-id="cm0qcm5gq0001rjpf44d53ghv" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/09/05/hello-world/" data-id="cm0qeosug000193pfdq9mgptm" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
