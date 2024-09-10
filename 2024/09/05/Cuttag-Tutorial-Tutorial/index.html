@@ -266,110 +266,28 @@
 <li>linux command<br>这里就需要之前提到的seqDepth，记得把$seqDepth替换成之前记录的，如果忘记记录的话就重新跑一遍<em>3.1.2のseqDepth</em>部分<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if [[ &quot;$seqDepth&quot; -gt &quot;1&quot; ]]; then</span><br><span class="line">  </span><br><span class="line">  mkdir -p $projPath/alignment/bedgraph</span><br><span class="line"></span><br><span class="line">  scale_factor=`echo &quot;10000 / $seqDepth&quot; | bc -l`</span><br><span class="line">  echo &quot;Scaling factor for $histName is: $scale_factor!&quot;</span><br><span class="line">  bedtools genomecov -bg -scale $scale_factor -i $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragments.bed -g $chromSize &gt; $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph</span><br><span class="line">  </span><br><span class="line">fi</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="5-1-Scaling-factor"><a href="#5-1-Scaling-factor" class="headerlink" title="5.1 Scaling factor"></a>5.1 Scaling factor</h2><ul>
-<li>R<br>scaleFactor<br>  这里涉及到一个命名&#x2F;定义的问题：前面有提到<code>Sequencing Depth</code>在本篇教程中实际上指的是<code>total reads</code>。但是在CUT&amp;Tag的数据处理中，<code>Sequencing Depth</code>这个术语有时会被宽泛地使用，直接指代样本的总读数。这样虽然有点简化了概念，但对于大多数数据处理和分析场景来说是有效的。因为他们的主要目的是通过标准化不同实验条件下的读数数量来比较不同条件的信号强度。<br>  回到scaleFactor。scaleFactor（缩放因子）用于对不同实验条件下的样本进行标准化校正。这个因子基于外源DNA（通常是E. coli DNA）对比例来计算，目的是校正不同样本之间由于实验条件或测序深度的差异，而确保样本间的比较更加准确。（不受测序深度差异影响）</li>
+<li><p>R<br>scaleFactor<br>  这里涉及到一个命名&#x2F;定义的问题：前面有提到<code>Sequencing Depth</code>在本篇教程中实际上指的是<code>total reads</code>。但是在CUT&amp;Tag的数据处理中，<code>Sequencing Depth</code>这个术语有时会被宽泛地使用，直接指代样本的总读数。这样虽然有点简化了概念，但对于大多数数据处理和分析场景来说是有效的。因为他们的主要目的是通过标准化不同实验条件下的读数数量来比较不同条件的信号强度。<br>  回到scaleFactor。scaleFactor（缩放因子）用于对不同实验条件下的样本进行标准化校正。这个因子基于外源DNA（通常是E. coli DNA）对比例来计算，目的是校正不同样本之间由于实验条件或测序深度的差异，而确保样本间的比较更加准确。（不受测序深度差异影响）</p>
+ <details>
+  <summary>列表详情</summary>
+  | Histone | Replicate | SequencingDepth | MappedFragNum_hg38 | AlignmentRate_hg38 | MappedFragNum_spikeIn | AlignmentRate_spikeIn | DuplicationRate |EstimatedLibrarySize | UniqueFragNum | scaleFactor |
+  |---------|-----------|-----------------|--------------------|--------------------|-----------------------|-----------------------|-----------------|---------------------|---------------|-------------|
+  | K27me3  | rep1      | 3568894         | 2861228            | 95.87%             | NA                    | NA%                   | 4.7577%         | 29108084             | 2725099.4     | 3.6968577   |
+  | K27me3  | rep2      | 3208657         | 2608071            | 96.51%             | NA                    | NA%                   | 1.0259%         | 126236715            | 2581314.8     | 4.4286980   |
+  | K4me3   | rep1      | 1755438         | 1494846            | 94.51%             | NA                    | NA%                   | 6.458%          | 11069778             | 1398308.8     | 4.7169811   |
+  | K4me3   | rep2      | 2124574         | 1743137            | 92.47%             | NA                    | NA%                   | 2.6512%         | 32290874             | 1696923.0     | 2.2867597   |
+  | IgG     | rep1      | 2621738         | 1749579            | 82.23%             | NA                    | NA%                   | 81.0974%        | 332438               | 330715.9      | 0.1664946   |
+  | IgG     | rep2      | 4181972         | 3071723            | 91.38%             | NA                    | NA%                   | 36.773%         | 3073459              | 1942158.3     | 0.1059344   |
+</details></li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Histone</th>
-<th>Replicate</th>
-<th>SequencingDepth</th>
-<th>MappedFragNum_hg38</th>
-<th>AlignmentRate_hg38</th>
-<th>MappedFragNum_spikeIn</th>
-<th>AlignmentRate_spikeIn</th>
-<th>DuplicationRate</th>
-<th>EstimatedLibrarySize</th>
-<th>UniqueFragNum</th>
-<th>scaleFactor</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>K27me3</td>
-<td>rep1</td>
-<td>3568894</td>
-<td>2861228</td>
-<td>95.87%</td>
-<td>NA</td>
-<td>NA%</td>
-<td>4.7577%</td>
-<td>29108084</td>
-<td>2725099.4</td>
-<td>3.6968577</td>
-</tr>
-<tr>
-<td>K27me3</td>
-<td>rep2</td>
-<td>3208657</td>
-<td>2608071</td>
-<td>96.51%</td>
-<td>NA</td>
-<td>NA%</td>
-<td>1.0259%</td>
-<td>126236715</td>
-<td>2581314.8</td>
-<td>4.4286980</td>
-</tr>
-<tr>
-<td>K4me3</td>
-<td>rep1</td>
-<td>1755438</td>
-<td>1494846</td>
-<td>94.51%</td>
-<td>NA</td>
-<td>NA%</td>
-<td>6.458%</td>
-<td>11069778</td>
-<td>1398308.8</td>
-<td>4.7169811</td>
-</tr>
-<tr>
-<td>K4me3</td>
-<td>rep2</td>
-<td>2124574</td>
-<td>1743137</td>
-<td>92.47%</td>
-<td>NA</td>
-<td>NA%</td>
-<td>2.6512%</td>
-<td>32290874</td>
-<td>1696923.0</td>
-<td>2.2867597</td>
-</tr>
-<tr>
-<td>IgG</td>
-<td>rep1</td>
-<td>2621738</td>
-<td>1749579</td>
-<td>82.23%</td>
-<td>NA</td>
-<td>NA%</td>
-<td>81.0974%</td>
-<td>332438</td>
-<td>330715.9</td>
-<td>0.1664946</td>
-</tr>
-<tr>
-<td>IgG</td>
-<td>rep2</td>
-<td>4181972</td>
-<td>3071723</td>
-<td>91.38%</td>
-<td>NA</td>
-<td>NA%</td>
-<td>36.773%</td>
-<td>3073459</td>
-<td>1942158.3</td>
-<td>0.1059344</td>
-</tr>
-</tbody></table>
 <h1 id="VI-Peak-calling"><a href="#VI-Peak-calling" class="headerlink" title="VI. Peak calling"></a>VI. Peak calling</h1><h2 id="6-1-SEACR"><a href="#6-1-SEACR" class="headerlink" title="6.1. SEACR"></a>6.1. SEACR</h2><ul>
 <li>下载seacr<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda seacr</span><br></pre></td></tr></table></figure></li>
 <li>下载chromVAR<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//新建R文档</span><br><span class="line">if (!require(&quot;BiocManager&quot;, quietly = TRUE))</span><br><span class="line">  install.packages(&quot;BiocManager&quot;)</span><br><span class="line">BiocManager::install(&quot;chromVAR&quot;)</span><br><span class="line">//再在console里输入</span><br><span class="line">library(chromVAR)</span><br></pre></td></tr></table></figure></li>
 <li>找SEACR_x.x.sh<br>一般在<code>～/miniocnda3/lib/SEACR_x.x.sh</code>，找到之后<code>pwd</code>，把返还的<code>路径/SEACR_x.x.sh</code>赋给seacr<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">seacr=&quot;/路径/SEACR_1.3.sh&quot;</span><br><span class="line">histControl=$2</span><br><span class="line">mkdir -p $projPath/peakCalling/SEACR</span><br><span class="line"></span><br><span class="line">bash $seacr $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph $projPath/alignment/bedgraph/$&#123;histControl&#125;_bowtie2.fragments.normalized.bedgraph non stringent $projPath/peakCalling/SEACR/$&#123;histName&#125;_seacr_control.peaks</span><br><span class="line"></span><br><span class="line">bash $seacr $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph 0.01 non stringent $projPath/peakCalling/SEACR/$&#123;histName&#125;_seacr_top0.01.peaks</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="6-1-1-Number-of-peaks-called"><a href="#6-1-1-Number-of-peaks-called" class="headerlink" title="6.1.1 Number of peaks called"></a>6.1.1 Number of peaks called</h2><ul>
-<li>R<br>peakType<br>peakN</li>
+<li><p>R</p>
+<p>peakType<br>peakN</p>
+</li>
 </ul>
 <h2 id="6-1-2-Reproducibility-of-the-peak-across-biological-replicates"><a href="#6-1-2-Reproducibility-of-the-peak-across-biological-replicates" class="headerlink" title="6.1.2 Reproducibility of the peak across biological replicates"></a>6.1.2 Reproducibility of the peak across biological replicates</h2><ul>
 <li>R<br>peakReprodNum<br>peakReprodRate</li>
