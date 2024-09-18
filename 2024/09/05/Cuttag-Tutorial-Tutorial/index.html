@@ -85,7 +85,7 @@
 </ul>
 <h2 id="3-2-Report-sequencing-mapping-summary"><a href="#3-2-Report-sequencing-mapping-summary" class="headerlink" title="3.2 Report sequencing mapping summary"></a>3.2 Report sequencing mapping summary</h2><p>  R Commands就不放进来了，没啥好说的，直接复制就行<br>  但还是具体说一下生成的表和图</p>
 <ul>
-<li><p>3.2.1<br>这一步读取了${histName}_bowtie2.txt，可以随便打开一个.txt对照的读一下<br>  “SequencingDepth”: 这一列提取的是总读数，就是txt文档里第一行的内容，所以实际上这一列不应该叫Sequencing Depth，因为他并不代表测序深度，而是所有原始读数的总数，应该是”Total number of reads” &#x2F; “Total sequencing reads”<br>  <em>更新：上面说的也对，因为确实会引发歧义。但是在CUT&amp;Tag工序中，</em></p>
+<li><p>3.2.1<br>这一步读取了${histName}_bowtie2.txt，可以随便打开一个.txt对照的读一下<br>  “SequencingDepth”: 这一列提取的是总读数，就是txt文档里第一行的内容，所以实际上这一列不应该叫Sequencing Depth，因为他并不代表测序深度，而是所有原始读数的总数，应该是”Total number of reads” &#x2F; “Total sequencing reads”<br>  <em>更新：上面说的也对，因为确实会引发歧义。但是在CUT&amp;Tag工序中，所需的测序读取数相比ChIP-seq等技术要少得多，使得使用总读取书作为测序深度的衡量标准在经济上更具可行性。</em></p>
 <p>  “MappedFragNum”: 成功映射到的基因组的片段总数，将文档内第四第五相加，对齐正好一次的片段数+对齐多于一次的片段数</p>
 <p>  “AlignmentRate”: 读取文档第6个元素，就是alignment rate</p>
 <table>
@@ -541,8 +541,7 @@
 <li><p>linux command</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $projPath/alignment/bigwig</span><br><span class="line"></span><br><span class="line">samtools sort -o $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam $projPath/alignment/bam/$&#123;histName&#125;_bowtie2.mapped.bam  </span><br><span class="line"></span><br><span class="line">samtools index $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam</span><br><span class="line">                               </span><br><span class="line">bamCoverage -b $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam -o $projPath/alignment/bigwig/$&#123;histName&#125;_raw.bw</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>hg38.bed<br><a target="_blank" rel="noopener" href="https://support.illumina.com.cn/downloads/enrichment-bed-files-hg38.html">https://support.illumina.com.cn/downloads/enrichment-bed-files-hg38.html</a></p>
-<p>用于下面生成热图时与hg38对齐。下载第一个Illumina Exome Panel v1.2</p>
+<li><p>hg38.bed<br><a target="_blank" rel="noopener" href="https://support.illumina.com.cn/downloads/enrichment-bed-files-hg38.html">https://support.illumina.com.cn/downloads/enrichment-bed-files-hg38.html</a><br>用于下面生成热图时与hg38对齐。下载第一个Illumina Exome Panel v1.2</p>
 </li>
 <li><p>7.2.1 Heatmap over transcription units</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cores=8</span><br><span class="line">computeMatrix scale-regions -S $projPath/alignment/bigwig/K27me3_rep1_raw.bw $projPath/alignment/bigwig/K27me3_rep2_raw.bw $projPath/alignment/bigwig/K4me3_rep1_raw.bw $projPath/alignment/bigwig/K4me3_rep2_raw.bw -R $projPath/data/hg38_gene/hg38_gene.tsv --beforeRegionStartLength 3000 --regionBodyLength 5000 --afterRegionStartLength 3000 --skipZeros -o $projPath/data/hg38_gene/matrix_gene.mat.gz -p $cores</span><br><span class="line"></span><br><span class="line">plotHeatmap -m $projPath/data/hg38_gene/matrix_gene.mat.gz -out $projPath/data/hg38_gene/Histone_gene.png --sortUsing sum</span><br><span class="line"></span><br></pre></td></tr></table></figure>
