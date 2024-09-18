@@ -8,35 +8,35 @@
 </ul>
 <h1 id="前期工作"><a href="#前期工作" class="headerlink" title="前期工作 "></a>前期工作 <!--下面正式进入教程--></h1><ul>
 <li><p><strong>$projPath</strong><br>$projPath作为一个”快捷方式“会在整个tutorial内高频率使用。如tutorial内所示，projPath是path to data and results，为防止找不到需要的数据的情况发生，建议大家在个人目录下也就是在 <code>～/</code> 下创建一个目录专门保存所有需要的数据<br> <code>mkdir -p ～/cuttag_project</code><br>接下来，有了存储数据和结果的地方之后就可以将该路径赋予给projPath</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd cuttag_project //进入该目录</span><br><span class="line">pwd //获取该目录路径</span><br><span class="line">projPath=&quot;/Users/tonyzh/cuttag_project&quot; //双引号内放上面返还的路径，</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd cuttag_project //进入该目录</span><br><span class="line">pwd //获取该目录路径</span><br><span class="line">projPath=&quot;/Users/tonyzh/cuttag_project&quot; //双引号内放上面返还的路径</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li><p><strong>Conda</strong><br><em>连接学校集群的同学可以只做初始化那一步</em></p>
 <ul>
 <li><strong>下载miniconda3</strong><br><a target="_blank" rel="noopener" href="https://docs.anaconda.com/miniconda/#quick-command-line-install">https://docs.anaconda.com/miniconda/#quick-command-line-install</a><br>此链接通过命令行下载，将页面拉到最下面，选择你的操作系统，再将提供的几行代码复制到终端里</li>
-<li><strong>初始化</strong><br>网站为两个Shell提供了初始化方法，可以通过 <code>echo $SHELL</code> 来确认自己的Shell，再选择你的shell的初始化代码，后通过<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">source ~/.zshrc</span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+<li><strong>初始化</strong><br>网站为两个Shell提供了初始化方法，可以通过 <code>echo $SHELL</code> 来确认自己的Shell，再选择你的shell的初始化代码，后通过<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">source ~/.zshrc</span><br><span class="line">source ~/.bashrc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 来更新Shell完成初始化</li>
-<li><strong>下载并配置Conda</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda install conda // 下载conda</span><br><span class="line">conda --version //可以通过这一步判断conda是否正确安装，如果报错回看上一步初始化</span><br><span class="line">conda config --show channels //目前channels只有一个base，是默认channel，需要添加两个</span><br><span class="line">conda config --append channels conda-forge //添加一个conda-forge channel</span><br><span class="line">conda config --append channels bioconda //添加一个bioconda channel</span><br></pre></td></tr></table></figure></li>
+<li><strong>下载并配置Conda</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">conda install conda // 下载conda</span><br><span class="line">conda --version //可以通过这一步判断conda是否正确安装，如果报错回看上一步初始化</span><br><span class="line">conda config --show channels //目前channels只有一个base，是默认channel，需要添加两个</span><br><span class="line">conda config --append channels conda-forge //添加一个conda-forge channel</span><br><span class="line">conda config --append channels bioconda //添加一个bioconda channel</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p><strong>导入data</strong><br>可以看到教程内一共有六组数据，分别是H3K27me3的rep1rep2，H3K4me3的rep1rep2，和IgG的rep1rep2。 教程里面只提供了IgG_rep2的command line下载方法，其他数据需要<br><a target="_blank" rel="noopener" href="https://www.ebi.ac.uk/ena/browser/home">https://www.ebi.ac.uk/ena/browser/home</a><br>进入该网址，在Enter accession处复制粘贴SRA entry：SRX########<br>往下翻可以看到下载数据的位置，有两种选择，通过<code>wget</code>或者直接<code>浏览器</code>下载。<br>首先需要创建存储数据的目录，将六组数据分别存储</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/cuttag_project/data/IgG_rep2</span><br><span class="line">mkdir -p ~/cuttag_project/data/IgG_rep1</span><br><span class="line">mkdir -p ~/cuttag_project/data/K27me3_rep2</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <ul>
 <li>Chrome：直接下载就好</li>
-<li>Wget: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O $projPath/data/dataName_rep#/dataName_rep#_R#.fastq.gz ftp://#links below#</span><br></pre></td></tr></table></figure>
-<em>实际的操作其实是下载TSV格式的download report再通过report内提供的链接wget，为提高效率我将所有链接都贴在下面了，可以直接使用</em><br><strong>K27me3_rep1: SRX8754646</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR122/017/SRR12246717/SRR12246717_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR122/017/SRR12246717/SRR12246717_2.fastq.gz</span><br></pre></td></tr></table></figure>
-<strong>K27me3_rep2: SRX7713678</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/040/SRR11074240/SRR11074240_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/040/SRR11074240/SRR11074240_2.fastq.gz</span><br></pre></td></tr></table></figure>
-<strong>K4me3_rep1: SRX7713692</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/054/SRR11074254/SRR11074254_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/054/SRR11074254/SRR11074254_2.fastq.gz</span><br></pre></td></tr></table></figure>
-<strong>K4me3_rep2: SRX7713696</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/058/SRR11074258/SRR11074258_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/058/SRR11074258/SRR11074258_2.fastq.gz</span><br></pre></td></tr></table></figure>
-<strong>IgG_rep1: SRX8468909</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/024/SRR11923224/SRR11923224_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/024/SRR11923224/SRR11923224_2.fastq.gz</span><br></pre></td></tr></table></figure></li>
+<li>Wget: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -O $projPath/data/dataName_rep#/dataName_rep#_R#.fastq.gz ftp://#links below#</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<em>实际的操作其实是下载TSV格式的download report再通过report内提供的链接wget，为提高效率我将所有链接都贴在下面了，可以直接使用</em><br><strong>K27me3_rep1: SRX8754646</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR122/017/SRR12246717/SRR12246717_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR122/017/SRR12246717/SRR12246717_2.fastq.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<strong>K27me3_rep2: SRX7713678</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/040/SRR11074240/SRR11074240_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/040/SRR11074240/SRR11074240_2.fastq.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<strong>K4me3_rep1: SRX7713692</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/054/SRR11074254/SRR11074254_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/054/SRR11074254/SRR11074254_2.fastq.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<strong>K4me3_rep2: SRX7713696</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/058/SRR11074258/SRR11074258_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR110/058/SRR11074258/SRR11074258_2.fastq.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<strong>IgG_rep1: SRX8468909</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R1: ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/024/SRR11923224/SRR11923224_1.fastq.gz</span><br><span class="line">R2: ftp.sra.ebi.ac.uk/vol1/fastq/SRR119/024/SRR11923224/SRR11923224_2.fastq.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 </ul>
 <h1 id="II-Data-Pre-processing"><a href="#II-Data-Pre-processing" class="headerlink" title="II. Data Pre-processing"></a>II. Data Pre-processing</h1><ul>
 <li><p>$histName<br>还是要理解一下histName，histName在tutorial里的作用和projPath差不多，你需要创建你自己的histName，当然如果你非常清楚的知道你需要用的组蛋白是哪一个，也可以不去设置这个histName。只是tutorial需要这样一个变量去简化他整个教程的linux部分。</p>
 <p>说完histName，我们先进行2.2. Merge technical replicates 那一步</p>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/fastq</span><br><span class="line">//cat将IgG_rep2_R1&amp;R2里的001&amp;002合并到一起</span><br><span class="line">cat ¥&#123;projPath&#125;/data/$&#123;histName&#125;/*_R1_*.fastq.gz &gt; $&#123;projPath&#125;/fastq/$&#123;histname&#125;_R1.fastq.gz</span><br><span class="line">cat ¥&#123;projPath&#125;/data/$&#123;histName&#125;/*_R2_*.fastq.gz &gt; $&#123;projPath&#125;/fastq/$&#123;histname&#125;_R2.fastq.gz</span><br><span class="line"></span><br><span class="line">//cp将data内储存的数据复制到fastq</span><br><span class="line">cp $&#123;projPath&#125;/data/$&#123;histName&#125;_rep1_R1.fastq.gz $&#123;projPath&#125;/fastq/$&#123;histName&#125;_rep1_R1.fastq.gz</span><br></pre></td></tr></table></figure></li>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/fastq</span><br><span class="line">//cat将IgG_rep2_R1&amp;R2里的001&amp;002合并到一起</span><br><span class="line">cat ¥&#123;projPath&#125;/data/$&#123;histName&#125;/*_R1_*.fastq.gz &gt; $&#123;projPath&#125;/fastq/$&#123;histname&#125;_R1.fastq.gz</span><br><span class="line">cat ¥&#123;projPath&#125;/data/$&#123;histName&#125;/*_R2_*.fastq.gz &gt; $&#123;projPath&#125;/fastq/$&#123;histname&#125;_R2.fastq.gz</span><br><span class="line"></span><br><span class="line">//cp将data内储存的数据复制到fastq</span><br><span class="line">cp $&#123;projPath&#125;/data/$&#123;histName&#125;_rep1_R1.fastq.gz $&#123;projPath&#125;/fastq/$&#123;histName&#125;_rep1_R1.fastq.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li><p>再回到上面直接照抄</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">##== linux command ==##</span><br><span class="line">//2.1.1 Obatain FastQC</span><br><span class="line">mkdir -p $projPath/tools</span><br><span class="line">wget -P $projPath/tools https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip</span><br><span class="line">cd $projPath/tools</span><br><span class="line">unzip fastqc_v0.11.9.zip</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//2.2.2 Run FastQC for quality check</span><br><span class="line">mkdir -p $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125;</span><br><span class="line"></span><br><span class="line">$projPath/tools/FastQC/fastqc -o $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125; -f fastq $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz</span><br><span class="line">$projPath/tools/FastQC/fastqc -o $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125; -f fastq $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">##== linux command ==##</span><br><span class="line">//2.1.1 Obatain FastQC</span><br><span class="line">mkdir -p $projPath/tools</span><br><span class="line">wget -P $projPath/tools https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip</span><br><span class="line">cd $projPath/tools</span><br><span class="line">unzip fastqc_v0.11.9.zip</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//2.2.2 Run FastQC for quality check</span><br><span class="line">mkdir -p $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125;</span><br><span class="line"></span><br><span class="line">$projPath/tools/FastQC/fastqc -o $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125; -f fastq $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz</span><br><span class="line">$projPath/tools/FastQC/fastqc -o $&#123;projPath&#125;/fastqFileQC/$&#123;histName&#125; -f fastq $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 <h1 id="III-Alignment"><a href="#III-Alignment" class="headerlink" title="III. Alignment"></a>III. Alignment</h1><h2 id="3-1-Bowtie2-alignment"><a href="#3-1-Bowtie2-alignment" class="headerlink" title="3.1. Bowtie2 alignment"></a>3.1. Bowtie2 alignment</h2><ul>
 <li><p>3.1.1</p>
@@ -44,42 +44,42 @@
 <li><p>先下载bowtie2<br><code>conda install -c bioconda bowtie2</code></p>
 </li>
 <li><p>先无视cores和ref，将四个目录建好，设好projPath的前提下照抄就行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/alignment/sam/bowtie2_summary</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bam</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bed</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bedgraph</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/alignment/sam/bowtie2_summary</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bam</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bed</span><br><span class="line">mkdir -p $&#123;projPath&#125;/alignment/bedgraph</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>bowtie2-build<br><em>“bowtie2-build builds a Bowtie index from a set of DNA sequences. bowtie2-buildoutputs a set of 6 files with suffixes .1.bt2, .2.bt2, .3.bt2, .4.bt2, .rev.1.bt2, and .rev.2.bt2. In the case of a large index these suffixes will have a bt2ltermination. These files together constitute the index: they are all that is needed to align reads to that reference. The original sequence FASTA files are no longer used by Bowtie 2 once the index is built.”</em></p>
 </li>
 <li><p>创建一个bowtie2Index目录以存放bowtie index<br><code>mkdir -p $&#123;projPath&#125;/bowtie2Index</code></p>
 </li>
 <li><p>下载hg38.fa</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -P $projPath https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.fa.gz</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -P $projPath https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.fa.gz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>bowtie2-build</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bowite2-build $&#123;projPath&#125;/hg38.fa $&#123;projPath&#125;/bowtie2Index/hg38</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bowite2-build $&#123;projPath&#125;/hg38.fa $&#123;projPath&#125;/bowtie2Index/hg38</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><em>会比较慢，结束之后可以在bowtie2Index目录里看到6个以hg38开头的文件</em></p>
 </li>
 <li><p>设置cores&amp;ref<br><code>cores=8</code><br><code>ref=&quot;/Users/tonyzh/cuttag_project/bowtie2Index/hg38</code> &#x2F;&#x2F;你自己的路径</p>
 <p><em>需要说一下，因为我们一共有6个hg38文件供bowtie2识别，bowtie2的一个参数 <code>-x &lt;bt2-idx&gt;</code> 可以识别全部，而我们只需要把hg38（也就是bowtie2-build的文件的base name）放在 <code>-x</code> 后面就可以让bowtie2识别全部6个文件</em></p>
 </li>
-<li><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bowtie2 --end-to-end --very-sensitive --no-mixed --no-discordant --phred33 -I 10 -X 700 -p $&#123;cores&#125; -x $&#123;ref&#125; -1 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz -2 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz -S $&#123;projPath&#125;/alignment/sam/$&#123;histName&#125;_bowtie2.sam &amp;&gt; $&#123;projPath&#125;/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2.txt</span><br></pre></td></tr></table></figure></li>
+<li><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bowtie2 --end-to-end --very-sensitive --no-mixed --no-discordant --phred33 -I 10 -X 700 -p $&#123;cores&#125; -x $&#123;ref&#125; -1 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz -2 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz -S $&#123;projPath&#125;/alignment/sam/$&#123;histName&#125;_bowtie2.sam &amp;&gt; $&#123;projPath&#125;/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>3.1.2</p>
 <ul>
 <li><p>下载samtools</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda samtools</span><br><span class="line">samtools --version</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda samtools</span><br><span class="line">samtools --version</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>下载E.Coli<br><a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_002853715.1/">https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_002853715.1&#x2F;</a><br>下载.Fasta，可以下载到cuttag_project里</p>
 </li>
 <li><p>bowtie2-build E.Coli</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bowtie2-build $&#123;projpath&#125;/ecoli.fa $&#123;projPath&#125;/bowtie2Index/ecoli</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bowtie2-build $&#123;projpath&#125;/ecoli.fa $&#123;projPath&#125;/bowtie2Index/ecoli</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>下载chromSize</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -P $projPath/hg38.chrom.sizes https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.chrom.sizes</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -P $projPath/hg38.chrom.sizes https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.chrom.sizes</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
-<li><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bowtie2 --end-to-end --very-sensitive --no-mixed --no-discordant --phred33 -I 10 -X 700 -p $&#123;cores&#125; -x $&#123;spikeInRef&#125; -1 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz -2 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz -S $projPath/alignment/sam/$&#123;histName&#125;_bowtie2_spikeIn.sam &amp;&gt; $projPath/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2_spikeIn.txt</span><br></pre></td></tr></table></figure></li>
+<li><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bowtie2 --end-to-end --very-sensitive --no-mixed --no-discordant --phred33 -I 10 -X 700 -p $&#123;cores&#125; -x $&#123;spikeInRef&#125; -1 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R1.fastq.gz -2 $&#123;projPath&#125;/fastq/$&#123;histName&#125;_R2.fastq.gz -S $projPath/alignment/sam/$&#123;histName&#125;_bowtie2_spikeIn.sam &amp;&gt; $projPath/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2_spikeIn.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li><p>seqDepth<br>需要将每个数据的seqDepth都存储下来以供后续<code>第五步</code>使用<br><em>所以建议全部数据都先跑一遍上一步，再跑这一步</em></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">seqDepthDouble=`samtools view -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2_spikeIn.sam | wc -l`</span><br><span class="line">seqDepth=$((seqDepthDouble/2))</span><br><span class="line">echo $seqDepth &gt;$projPath/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2_spikeIn.seqDepth</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">seqDepthDouble=`samtools view -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2_spikeIn.sam | wc -l`</span><br><span class="line">seqDepth=$((seqDepthDouble/2))</span><br><span class="line">echo $seqDepth &gt;$projPath/alignment/sam/bowtie2_summary/$&#123;histName&#125;_bowtie2_spikeIn.seqDepth</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 </ul>
@@ -146,7 +146,7 @@
 <table>
 <thead>
 <tr>
-<th>Histone Replicate</th>
+<th>Histone</th>
 <th>Replicate</th>
 <th>SequencingDepth</th>
 <th>MappedFragNum_hg38</th>
@@ -223,13 +223,13 @@
 <li><p>设置picardCMD<br>首先查询picard.jar路径<br><code>find $(conda info --base) -name &quot;picard.jar&quot;</code><br>picardCMD&#x3D;”&#x2F;上述返还路径&#x2F;picard.jar”</p>
 </li>
 <li><p>继续</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/alignment/removeDuplicate/picard_summary</span><br><span class="line"></span><br><span class="line">// Sort by coordinate</span><br><span class="line">java -jar $picardCMD SortSam I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam O=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam SORT_ORDER=coordinate</span><br><span class="line"></span><br><span class="line">// Mark duplicates</span><br><span class="line">java -jar $picardCMD MarkDuplicates I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam O=$projPath/alignment/removeDuplicate/$&#123;histName&#125;_bowtie2.sorted.dupMarked.sam METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/$&#123;histName&#125;_picard.dupMark.txt</span><br><span class="line"></span><br><span class="line">// Remove duplicates</span><br><span class="line">java -jar picardCMD MarkDuplicates I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam O=$projPath/alignment/removeDuplicate/$&#123;histName&#125;_bowtie2.sorted.rmDup.sam REMOVE_DUPLICATES=true METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/$&#123;histName&#125;_picard.rmDup.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $&#123;projPath&#125;/alignment/removeDuplicate/picard_summary</span><br><span class="line"></span><br><span class="line">// Sort by coordinate</span><br><span class="line">java -jar $picardCMD SortSam I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam O=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam SORT_ORDER=coordinate</span><br><span class="line"></span><br><span class="line">// Mark duplicates</span><br><span class="line">java -jar $picardCMD MarkDuplicates I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam O=$projPath/alignment/removeDuplicate/$&#123;histName&#125;_bowtie2.sorted.dupMarked.sam METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/$&#123;histName&#125;_picard.dupMark.txt</span><br><span class="line"></span><br><span class="line">// Remove duplicates</span><br><span class="line">java -jar picardCMD MarkDuplicates I=$projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sorted.sam O=$projPath/alignment/removeDuplicate/$&#123;histName&#125;_bowtie2.sorted.rmDup.sam REMOVE_DUPLICATES=true METRICS_FILE=$projPath/alignment/removeDuplicate/picard_summary/$&#123;histName&#125;_picard.rmDup.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>R部分</p>
 <ul>
 <li><p>表格<br><em>DuplicationRate</em><br>  重复率，重复片段数&#x2F;总测序片段数 * 100%，可以在_picard.dupMarked.txt里找到’PERCENT_DUPLICATION‘的值乘以100就是他的重复率</p>
 <p><em>EstimatedLibrarySize</em><br>  估计文库大小，指测序中估算的文库中包含的唯一片段的总数, _picard.dupMarked.txt文件中可以找到‘ESTIMATED_LIBRARY_SIZE‘</p>
-<p><em>UniqueFragNum</em><br>唯一片段数，指测序实验中被标记为唯一片段的数量，代表没有被标记为重复的、有用的片段数。唯一片段数 &#x3D; 成功映射的片段数 x (1 - 重复率&#x2F;100)。成功映射的片段数是前面通过bowtie2得到的</p>
+<p><em>UniqueFragNum</em><br>  唯一片段数，指测序实验中被标记为唯一片段的数量，代表没有被标记为重复的、有用的片段数。唯一片段数 &#x3D; 成功映射的片段数 x (1 - 重复率&#x2F;100)。成功映射的片段数是前面通过bowtie2得到的</p>
 </li>
 <li><p>图标<br>还是一样的盒须图+散点图，用rep1和rep2的两个数据作为upper bound &amp; lower bound。</p>
 </li>
@@ -240,20 +240,20 @@
 </ul>
 <h2 id="3-4-Assess-mapped-fragment-size-distribution"><a href="#3-4-Assess-mapped-fragment-size-distribution" class="headerlink" title="3.4 Assess mapped fragment size distribution"></a>3.4 Assess mapped fragment size distribution</h2><ul>
 <li>3.4.<ul>
-<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// Extract the 9th column from the alignment sam file which is the fragment length, 具体在abs($9)展现</span><br><span class="line">samtools view -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam | awk -F&#x27;\t&#x27; &#x27;function abs(x)&#123;return ((x &lt; 0.0) ? -x : x)&#125; &#123;print abs($9)&#125;&#x27; | sort | uniq -c | awk -v OFS=&quot;\t&quot; &#x27;&#123;print $2, $1/2&#125;&#x27; &gt;$projPath/alignment/sam/fragmentLen/$&#123;histName&#125;_fragmentLen.txt</span><br></pre></td></tr></table></figure></li>
+<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// Extract the 9th column from the alignment sam file which is the fragment length, 具体在abs($9)展现</span><br><span class="line">samtools view -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam | awk -F&#x27;\t&#x27; &#x27;function abs(x)&#123;return ((x &lt; 0.0) ? -x : x)&#125; &#123;print abs($9)&#125;&#x27; | sort | uniq -c | awk -v OFS=&quot;\t&quot; &#x27;&#123;print $2, $1/2&#125;&#x27; &gt;$projPath/alignment/sam/fragmentLen/$&#123;histName&#125;_fragmentLen.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li>R command<br>读取<code>_fragmentLen.txt</code><br>小提琴图直观展示了各组蛋白样本片段长度分布的形状、宽度和密度，便于比较不同组蛋白样本之间的变异性和集中趋势。较宽部分表示该片段长度出现频率较高，高度表示片段长度的范围。<br>线图则直接显示了不同片段长度的频数分布，清晰地展示了各组蛋白中最常见的片段长度。</li>
 </ul>
 </li>
 </ul>
 <h1 id="IV-Alignment-results-filtering-and-file-format-conversion"><a href="#IV-Alignment-results-filtering-and-file-format-conversion" class="headerlink" title="IV. Alignment results filtering and file format conversion"></a>IV. Alignment results filtering and file format conversion</h1><h2 id="4-1-Filtering-mapped-reads-by-the-mapping-quality-filtering"><a href="#4-1-Filtering-mapped-reads-by-the-mapping-quality-filtering" class="headerlink" title="4.1 Filtering mapped reads by the mapping quality filtering"></a>4.1 Filtering mapped reads by the mapping quality filtering</h2><ul>
-<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">minQualityScore=2 //这行可以跳过，相对的，把下面遇到的$minQualityScore替换成2</span><br><span class="line">samtools view -q $minQualityScore $&#123;projPath&#125;/alignment/sam/$&#123;histName&#125;_bowtie2.sam &gt;$&#123;projPath&#125;/alignment/sam/$&#123;histName&#125;_bowite2.qualityScore$minQualityScore.sam</span><br></pre></td></tr></table></figure></li>
+<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">minQualityScore=2 //这行可以跳过，相对的，把下面遇到的$minQualityScore替换成2</span><br><span class="line">samtools view -q $minQualityScore $&#123;projPath&#125;/alignment/sam/$&#123;histName&#125;_bowtie2.sam &gt;$&#123;projPath&#125;/alignment/sam/$&#123;histName&#125;_bowite2.qualityScore$minQualityScore.sam</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="4-2-File-format-conversion"><a href="#4-2-File-format-conversion" class="headerlink" title="4.2 File format conversion"></a>4.2 File format conversion</h2><ul>
-<li>下载bedtools<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda bedtools</span><br></pre></td></tr></table></figure></li>
-<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">## Filter and keep the mapped read pairs</span><br><span class="line">samtools view -bS -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam &gt;$projPath/alignment/bam/$&#123;histName&#125;_bowtie2.mapped.bam</span><br><span class="line"></span><br><span class="line">## Convert into bed file format</span><br><span class="line">bedtools bamtobed -i $projPath/alignment/bam/$&#123;histName&#125;_bowtie2.mapped.bam -bedpe &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.bed</span><br><span class="line"></span><br><span class="line">## Keep the read pairs that are on the same chromosome and fragment length less than 1000bp.</span><br><span class="line">awk &#x27;$1==$4 &amp;&amp; $6-$2 &lt; 1000 &#123;print $0&#125;&#x27; $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.bed &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.clean.bed</span><br><span class="line"></span><br><span class="line">## Only extract the fragment related columns</span><br><span class="line">cut -f 1,2,6 $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.clean.bed | sort -k1,1 -k2,2n -k3,3n  &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragments.bed</span><br></pre></td></tr></table></figure></li>
+<li>下载bedtools<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda bedtools</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">## Filter and keep the mapped read pairs</span><br><span class="line">samtools view -bS -F 0x04 $projPath/alignment/sam/$&#123;histName&#125;_bowtie2.sam &gt;$projPath/alignment/bam/$&#123;histName&#125;_bowtie2.mapped.bam</span><br><span class="line"></span><br><span class="line">## Convert into bed file format</span><br><span class="line">bedtools bamtobed -i $projPath/alignment/bam/$&#123;histName&#125;_bowtie2.mapped.bam -bedpe &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.bed</span><br><span class="line"></span><br><span class="line">## Keep the read pairs that are on the same chromosome and fragment length less than 1000bp.</span><br><span class="line">awk &#x27;$1==$4 &amp;&amp; $6-$2 &lt; 1000 &#123;print $0&#125;&#x27; $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.bed &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.clean.bed</span><br><span class="line"></span><br><span class="line">## Only extract the fragment related columns</span><br><span class="line">cut -f 1,2,6 $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.clean.bed | sort -k1,1 -k2,2n -k3,3n  &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragments.bed</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="4-3-Assess-replicate-reproducibility"><a href="#4-3-Assess-replicate-reproducibility" class="headerlink" title="4.3 Assess replicate reproducibility"></a>4.3 Assess replicate reproducibility</h2><ul>
-<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// We use the mid point of each fragment to infer which 500bp bins does this fragment belong to.</span><br><span class="line">binLen=500</span><br><span class="line">awk -v w=$binLen &#x27;&#123;print $1, int(($2 + $3)/(2*w))*w + w/2&#125;&#x27; $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragments.bed | sort -k1,1V -k2,2n | uniq -c | awk -v OFS=&quot;\t&quot; &#x27;&#123;print $2, $3, $1&#125;&#x27; |  sort -k1,1V -k2,2n  &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragmentsCount.bin$binLen.bed</span><br></pre></td></tr></table></figure></li>
+<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// We use the mid point of each fragment to infer which 500bp bins does this fragment belong to.</span><br><span class="line">binLen=500</span><br><span class="line">awk -v w=$binLen &#x27;&#123;print $1, int(($2 + $3)/(2*w))*w + w/2&#125;&#x27; $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragments.bed | sort -k1,1V -k2,2n | uniq -c | awk -v OFS=&quot;\t&quot; &#x27;&#123;print $2, $3, $1&#125;&#x27; |  sort -k1,1V -k2,2n  &gt;$projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragmentsCount.bin$binLen.bed</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li>R command<br>读取<code>_bowtie2.fragmentsCound.bin500.bed</code><br><em>相关性矩阵热图</em><ul>
 <li>颜色深浅表示相关性洗漱的大小；红色越深，相关性越高，越接近1；颜色越浅，相关性越低，越接近0或负值。</li>
 <li>不同样本相关性相同表示片段分布非常近，反之差异较大</li>
@@ -263,15 +263,13 @@
 </ul>
 <h1 id="V-Spike-in-calibration"><a href="#V-Spike-in-calibration" class="headerlink" title="V. Spike-in calibration"></a>V. Spike-in calibration</h1><p>这一步在3.x的基础上消除</p>
 <ul>
-<li>linux command<br>这里就需要之前提到的seqDepth，记得把$seqDepth替换成之前记录的，如果忘记记录的话就重新跑一遍<em>3.1.2のseqDepth</em>部分<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if [[ &quot;$seqDepth&quot; -gt &quot;1&quot; ]]; then</span><br><span class="line">  </span><br><span class="line">  mkdir -p $projPath/alignment/bedgraph</span><br><span class="line"></span><br><span class="line">  scale_factor=`echo &quot;10000 / $seqDepth&quot; | bc -l`</span><br><span class="line">  echo &quot;Scaling factor for $histName is: $scale_factor!&quot;</span><br><span class="line">  bedtools genomecov -bg -scale $scale_factor -i $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragments.bed -g $chromSize &gt; $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph</span><br><span class="line">  </span><br><span class="line">fi</span><br></pre></td></tr></table></figure></li>
+<li>linux command<br>这里就需要之前提到的seqDepth，记得把$seqDepth替换成之前记录的，如果忘记记录的话就重新跑一遍<em>3.1.2のseqDepth</em>部分<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if [[ &quot;$seqDepth&quot; -gt &quot;1&quot; ]]; then</span><br><span class="line">  </span><br><span class="line">  mkdir -p $projPath/alignment/bedgraph</span><br><span class="line"></span><br><span class="line">  scale_factor=`echo &quot;10000 / $seqDepth&quot; | bc -l`</span><br><span class="line">  echo &quot;Scaling factor for $histName is: $scale_factor!&quot;</span><br><span class="line">  bedtools genomecov -bg -scale $scale_factor -i $projPath/alignment/bed/$&#123;histName&#125;_bowtie2.fragments.bed -g $chromSize &gt; $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph</span><br><span class="line">  </span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="5-1-Scaling-factor"><a href="#5-1-Scaling-factor" class="headerlink" title="5.1 Scaling factor"></a>5.1 Scaling factor</h2><ul>
 <li>R<br>scaleFactor<br>  这里涉及到一个命名&#x2F;定义的问题：前面有提到<code>Sequencing Depth</code>在本篇教程中实际上指的是<code>total reads</code>。但是在CUT&amp;Tag的数据处理中，<code>Sequencing Depth</code>这个术语有时会被宽泛地使用，直接指代样本的总读数。这样虽然有点简化了概念，但对于大多数数据处理和分析场景来说是有效的。因为他们的主要目的是通过标准化不同实验条件下的读数数量来比较不同条件的信号强度。<br>  回到scaleFactor。scaleFactor（缩放因子）用于对不同实验条件下的样本进行标准化校正。这个因子基于外源DNA（通常是E. coli DNA）对比例来计算，目的是校正不同样本之间由于实验条件或测序深度的差异，而确保样本间的比较更加准确。（不受测序深度差异影响）<br>  <em>10000 &#x2F; seqDepth(MappedFragNum_spikeIn) &#x3D; scaleFactor</em></li>
 </ul>
 <details>
-<summary>列表详情</summary>
-
-<div class="table-wrapper" markdown="block">
+<summary>列表</summary>
 
 <table>
 <thead>
@@ -368,34 +366,189 @@
 <td>0.1059344</td>
 </tr>
 </tbody></table>
-</div>
-
 </details> 
 
-<h1 id="VI-Peak-calling"><a href="#VI-Peak-calling" class="headerlink" title="VI. Peak calling"></a>VI. Peak calling</h1><h2 id="6-1-SEACR"><a href="#6-1-SEACR" class="headerlink" title="6.1. SEACR"></a>6.1. SEACR</h2><ul>
-<li>下载seacr<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda seacr</span><br></pre></td></tr></table></figure></li>
-<li>下载chromVAR<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//新建R文档</span><br><span class="line">if (!require(&quot;BiocManager&quot;, quietly = TRUE))</span><br><span class="line">  install.packages(&quot;BiocManager&quot;)</span><br><span class="line">BiocManager::install(&quot;chromVAR&quot;)</span><br><span class="line">//再在console里输入</span><br><span class="line">library(chromVAR)</span><br></pre></td></tr></table></figure></li>
-<li>找SEACR_x.x.sh<br>一般在<code>～/miniocnda3/lib/SEACR_x.x.sh</code>，找到之后<code>pwd</code>，把返还的<code>路径/SEACR_x.x.sh</code>赋给seacr<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">seacr=&quot;/路径/SEACR_1.3.sh&quot;</span><br><span class="line">histControl=$2</span><br><span class="line">mkdir -p $projPath/peakCalling/SEACR</span><br><span class="line"></span><br><span class="line">bash $seacr $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph $projPath/alignment/bedgraph/$&#123;histControl&#125;_bowtie2.fragments.normalized.bedgraph non stringent $projPath/peakCalling/SEACR/$&#123;histName&#125;_seacr_control.peaks</span><br><span class="line"></span><br><span class="line">bash $seacr $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph 0.01 non stringent $projPath/peakCalling/SEACR/$&#123;histName&#125;_seacr_top0.01.peaks</span><br></pre></td></tr></table></figure></li>
+<h1 id="VI-Peak-calling"><a href="#VI-Peak-calling" class="headerlink" title="VI. Peak calling"></a>VI. Peak calling</h1><h2 id="6-1-SEACR"><a href="#6-1-SEACR" class="headerlink" title="6.1. SEACR"></a>6.1. SEACR</h2><p><em>这一步中，主要目的是识别染色质中哪些与特定修饰或蛋白质结合的区域，这些区域富集了信号，通常称为“峰值”</em></p>
+<ul>
+<li>下载seacr<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda seacr</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>下载chromVAR<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//新建R文档</span><br><span class="line">if (!require(&quot;BiocManager&quot;, quietly = TRUE))</span><br><span class="line">  install.packages(&quot;BiocManager&quot;)</span><br><span class="line">BiocManager::install(&quot;chromVAR&quot;)</span><br><span class="line">//再在console里输入</span><br><span class="line">library(chromVAR)</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>找SEACR_x.x.sh<br>一般在<code>～/miniocnda3/lib/SEACR_x.x.sh</code>，找到之后<code>pwd</code>，把返还的<code>路径/SEACR_x.x.sh</code>赋给seacr<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">seacr=&quot;/路径/SEACR_1.3.sh&quot;</span><br><span class="line">histControl=$2</span><br><span class="line">mkdir -p $projPath/peakCalling/SEACR</span><br><span class="line"></span><br><span class="line">bash $seacr $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph $projPath/alignment/bedgraph/$&#123;histControl&#125;_bowtie2.fragments.normalized.bedgraph non stringent $projPath/peakCalling/SEACR/$&#123;histName&#125;_seacr_control.peaks</span><br><span class="line"></span><br><span class="line">bash $seacr $projPath/alignment/bedgraph/$&#123;histName&#125;_bowtie2.fragments.normalized.bedgraph 0.01 non stringent $projPath/peakCalling/SEACR/$&#123;histName&#125;_seacr_top0.01.peaks</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="6-1-1-Number-of-peaks-called"><a href="#6-1-1-Number-of-peaks-called" class="headerlink" title="6.1.1 Number of peaks called"></a>6.1.1 Number of peaks called</h2><ul>
-<li><p>R</p>
-<p>peakType<br>peakN</p>
-</li>
+<li>R<br>6.1.2的图涵盖了这一步，下面一起说</li>
 </ul>
 <h2 id="6-1-2-Reproducibility-of-the-peak-across-biological-replicates"><a href="#6-1-2-Reproducibility-of-the-peak-across-biological-replicates" class="headerlink" title="6.1.2 Reproducibility of the peak across biological replicates"></a>6.1.2 Reproducibility of the peak across biological replicates</h2><ul>
-<li>R<br>peakReprodNum<br>peakReprodRate</li>
+<li><p>R<br><em>peakType</em><br>  用于区分不同条件下调用的峰值类型。</p>
+<p>  control：通过IgG对照样本调用出来的。IgG可以帮助我们过滤掉背景噪音。在实验中，IgG不与特定目标蛋白或修饰结合，因此IgG样本代表了非特异性噪音。调用control峰值有助于识别哪些区域的信号是背景噪音，而不是真正的富集信号。<br>  top0.01：信号最强的前1%的峰值，这些区域通常是高置信度的。通过对信号强度进行排名，提取信号最强的1%区域，可以帮助我们专注于最具生物学意义的区域。这些峰值区域的信号远高于背景噪音，通常反映了真实的染色质修饰或蛋白结合。</p>
+<p>  区分peakType主要目的是更好的区分实验中的真实生物学信号盒技术噪音以及确保实验数据的可靠性并减少由于非特异性噪音导致的错误结果</p>
+<p><em>peakN</em><br>  <code>peakN = data.fram(peakN = nrow(peakInfo), ...)</code></p>
+<p>  SEACR工具会对比目标样本（如K27me3）和对照样本（IgG），随即生成一个<code>.bed</code>文件。这个文件每一行代表一个峰值，包含峰值的起始位置、终止位置和其他统计信息。</p>
+<p>  而peakN通过<code>nrow()</code>函数提取每个<code>.bed</code>文件的总行数，代表每次对比所产生的峰值总数，从而得到下述表格中的数字</p>
+<p><em>peakReprodNum</em><br>  再现峰值数量，通过对比每个<code>.bed</code>文件中的峰值起始位置和结束位置，统计重叠出现（overlap）的峰值的次数</p>
+<p><em>peakReprodRate</em></p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//peakReprod = PeakReprodNum</span><br><span class="line">peakReprodRate = peakReprod/peakN * 100</span><br></pre></td></tr></table></figure>
+<p>  再现峰值出现的比例。重叠出现的峰值占全部峰值的比例</p>
+</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>Histone</th>
+<th>Replicate</th>
+<th>peakType</th>
+<th>peakN</th>
+<th>peakReprodNum</th>
+<th>peakReprodRate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>K27me3</td>
+<td>rep1</td>
+<td>control</td>
+<td>13006</td>
+<td>31924</td>
+<td>245.45594</td>
+</tr>
+<tr>
+<td>K27me3</td>
+<td>rep1</td>
+<td>top0.01</td>
+<td>6004</td>
+<td>5384</td>
+<td>89.67355</td>
+</tr>
+<tr>
+<td>K27me3</td>
+<td>rep2</td>
+<td>control</td>
+<td>251283</td>
+<td>31924</td>
+<td>12.70440</td>
+</tr>
+<tr>
+<td>K27me3</td>
+<td>rep2</td>
+<td>top0.01</td>
+<td>9801</td>
+<td>5384</td>
+<td>54.93317</td>
+</tr>
+<tr>
+<td>K4me3</td>
+<td>rep1</td>
+<td>control</td>
+<td>3692</td>
+<td>3684</td>
+<td>99.78332</td>
+</tr>
+<tr>
+<td>K4me3</td>
+<td>rep1</td>
+<td>top0.01</td>
+<td>903</td>
+<td>898</td>
+<td>99.44629</td>
+</tr>
+<tr>
+<td>K4me3</td>
+<td>rep2</td>
+<td>control</td>
+<td>7049</td>
+<td>3684</td>
+<td>52.26273</td>
+</tr>
+<tr>
+<td>K4me3</td>
+<td>rep2</td>
+<td>top0.01</td>
+<td>3765</td>
+<td>898</td>
+<td>23.85126</td>
+</tr>
+</tbody></table>
 <h2 id="6-1-3-FRagment-proportion-in-Peaks-regions"><a href="#6-1-3-FRagment-proportion-in-Peaks-regions" class="headerlink" title="6.1.3 FRagment proportion in Peaks regions"></a>6.1.3 FRagment proportion in Peaks regions</h2><ul>
-<li>R<br>FragInPeakNum<br>FRiPs</li>
+<li><p>R<br><em>FragInPeakNum</em><br>  峰区内的片段数量</p>
+<p>  结合<code>_bowtie2.mapped.bam</code>文件中的片段位置与<code>.peaks.stringent.bed</code>文件中的峰值位置，得出峰值内的片段数量</p>
+<p><em>FRiPs</em><br>  峰区域内片段的比例。用于评估数据质量<br>  <code>FRiPs = 峰区域内的片段数量 / 总的已映射片段数量(MappedFragNum_hg38) * 100%</code></p>
+</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>Histone</th>
+<th>Replicate</th>
+<th>SequencingDepth</th>
+<th>MappedFragNum_hg38</th>
+<th>AlignmentRate_hg38</th>
+<th>FragInPeakNum</th>
+<th>FRiPs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>K27me3</td>
+<td>rep1</td>
+<td>2984630</td>
+<td>2861228</td>
+<td>95.87</td>
+<td>1200390</td>
+<td>41.95366</td>
+</tr>
+<tr>
+<td>K27me3</td>
+<td>rep2</td>
+<td>2702260</td>
+<td>2608071</td>
+<td>96.51</td>
+<td>1635121</td>
+<td>62.69465</td>
+</tr>
+<tr>
+<td>K4me3</td>
+<td>rep1</td>
+<td>1581710</td>
+<td>1494846</td>
+<td>94.51</td>
+<td>1032228</td>
+<td>69.05246</td>
+</tr>
+<tr>
+<td>K4me3</td>
+<td>rep2</td>
+<td>1885056</td>
+<td>1743137</td>
+<td>92.47</td>
+<td>1166007</td>
+<td>66.89130</td>
+</tr>
+</tbody></table>
 <h2 id="6-1-4-Visualization-of-peak-number-peak-width-peak-reproducibility-and-FRiPs"><a href="#6-1-4-Visualization-of-peak-number-peak-width-peak-reproducibility-and-FRiPs" class="headerlink" title="6.1.4 Visualization of peak number, peak width, peak reproducibility and FRiPs"></a>6.1.4 Visualization of peak number, peak width, peak reproducibility and FRiPs</h2><ul>
-<li>图标</li>
+<li><p>7A<br>峰值数量<br>比较不同组蛋白和重复实验的峰值数量</p>
+</li>
+<li><p>7B<br>峰值宽度<br>展示峰值的宽度分布</p>
+</li>
+<li><p>7C<br>再现峰值比例<br>衡量峰值的再现比例</p>
+</li>
+<li><p>7D<br>片段峰内比例，FRiPs<br>衡量片段在峰值内的覆盖率</p>
+</li>
 </ul>
 <h1 id="VII-Visualization"><a href="#VII-Visualization" class="headerlink" title="VII. Visualization"></a>VII. Visualization</h1><h2 id="7-1-Browser-display-of-normalized-bedgraph-files"><a href="#7-1-Browser-display-of-normalized-bedgraph-files" class="headerlink" title="7.1. Browser display of normalized bedgraph files."></a>7.1. Browser display of normalized bedgraph files.</h2><h2 id="7-2-Heatmap-visualization-on-specific-regions"><a href="#7-2-Heatmap-visualization-on-specific-regions" class="headerlink" title="7.2. Heatmap visualization on specific regions"></a>7.2. Heatmap visualization on specific regions</h2><ul>
-<li>下载deeptools<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda deeptools</span><br><span class="line">//如果conda下载不了</span><br><span class="line">pip install deeptools </span><br></pre></td></tr></table></figure></li>
-<li>linux command<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $projPath/alignment/bigwig</span><br><span class="line"></span><br><span class="line">samtools sort -o $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam $projPath/alignment/bam/$&#123;histName&#125;_bowtie2.mapped.bam  </span><br><span class="line"></span><br><span class="line">samtools index $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam</span><br><span class="line">                               </span><br><span class="line">bamCoverage -b $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam -o $projPath/alignment/bigwig/$&#123;histName&#125;_raw.bw</span><br></pre></td></tr></table></figure></li>
-<li>7.2.1 Heatmap over transcription units<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cores=8</span><br><span class="line">computeMatrix scale-regions -S $projPath/alignment/bigwig/K27me3_rep1_raw.bw $projPath/alignment/bigwig/K27me3_rep2_raw.bw $projPath/alignment/bigwig/K4me3_rep1_raw.bw $projPath/alignment/bigwig/K4me3_rep2_raw.bw -R $projPath/data/hg38_gene/hg38_gene.tsv --beforeRegionStartLength 3000 --regionBodyLength 5000 --afterRegionStartLength 3000 --skipZeros -o $projPath/data/hg38_gene/matrix_gene.mat.gz -p $cores</span><br><span class="line"></span><br><span class="line">plotHeatmap -m $projPath/data/hg38_gene/matrix_gene.mat.gz -out $projPath/data/hg38_gene/Histone_gene.png --sortUsing sum</span><br></pre></td></tr></table></figure></li>
-<li>7.2.2 Heatmap on CUT&amp;Tag peaks<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>下载deeptools</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda install -c bioconda deeptools</span><br><span class="line">//如果conda下载不了</span><br><span class="line">pip install deeptools </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>调教deeptools里的heatmapper.py<br>将第379行的<code>np.NAN</code>改成<code>np.nan</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">find $(conda info --base) -name &quot;heatmapper.py&quot; //会返还一个路径</span><br><span class="line">nano /路径/heatmapper.py</span><br><span class="line">//找到379行，改正</span><br><span class="line">//然后保存：control+X，Y，回车</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>linux command</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $projPath/alignment/bigwig</span><br><span class="line"></span><br><span class="line">samtools sort -o $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam $projPath/alignment/bam/$&#123;histName&#125;_bowtie2.mapped.bam  </span><br><span class="line"></span><br><span class="line">samtools index $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam</span><br><span class="line">                               </span><br><span class="line">bamCoverage -b $projPath/alignment/bam/$&#123;histName&#125;.sorted.bam -o $projPath/alignment/bigwig/$&#123;histName&#125;_raw.bw</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hg38.bed<br><a target="_blank" rel="noopener" href="https://support.illumina.com.cn/downloads/enrichment-bed-files-hg38.html">https://support.illumina.com.cn/downloads/enrichment-bed-files-hg38.html</a></p>
+<p>用于下面生成热图时与hg38对齐。下载第一个Illumina Exome Panel v1.2</p>
+</li>
+<li><p>7.2.1 Heatmap over transcription units</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cores=8</span><br><span class="line">computeMatrix scale-regions -S $projPath/alignment/bigwig/K27me3_rep1_raw.bw $projPath/alignment/bigwig/K27me3_rep2_raw.bw $projPath/alignment/bigwig/K4me3_rep1_raw.bw $projPath/alignment/bigwig/K4me3_rep2_raw.bw -R $projPath/data/hg38_gene/hg38_gene.tsv --beforeRegionStartLength 3000 --regionBodyLength 5000 --afterRegionStartLength 3000 --skipZeros -o $projPath/data/hg38_gene/matrix_gene.mat.gz -p $cores</span><br><span class="line"></span><br><span class="line">plotHeatmap -m $projPath/data/hg38_gene/matrix_gene.mat.gz -out $projPath/data/hg38_gene/Histone_gene.png --sortUsing sum</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>7.2.2 Heatmap on CUT&amp;Tag peaks</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;&#123;split($6, summit, &quot;:&quot;); split(summit[2], region, &quot;-&quot;); print summit[1]&quot;\t&quot;region[2]&#125;&#x27; $projPath/peakCalling/SEACR/$&#123;histName&#125;_$&#123;repName&#125;_seacr_control.peaks.stringent.bed &gt;$projPath/peakCalling/SEACR/$&#123;histName&#125;_$&#123;repName&#125;_seacr_control.peaks.summitRegion.bed</span><br><span class="line"></span><br><span class="line">computeMatrix reference-point -S $projPath/alignment/bigwig/$&#123;histName&#125;_$&#123;repName&#125;_raw.bw -R $projPath/peakCalling/SEACR/$&#123;histName&#125;_$&#123;repName&#125;_seacr_control.peaks.summitRegion.bed --skipZeros -o $projPath/peakCalling/SEACR/$&#123;histName&#125;_$&#123;repName&#125;_SEACR.mat.gz -p $cores -a 3000 -b 3000 --referencePoint center</span><br><span class="line"></span><br><span class="line">plotHeatmap -m $projPath/peakCalling/SEACR/$&#123;histName&#125;_SEACR.mat.gz -out $projPath/peakCalling/SEACR/$&#123;histName&#125;_SEACR_heatmap.png --sortUsing sum --startLabel &quot;Peak Start&quot; --endLabel &quot;Peak End&quot; --xAxisLabel &quot;&quot; --regionsLabel &quot;Peaks&quot; --samplesLabel &quot;$&#123;histName&#125; $&#123;repName&#125;&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
 <h1 id="VIII-Differential-analysis"><a href="#VIII-Differential-analysis" class="headerlink" title="VIII. Differential analysis"></a>VIII. Differential analysis</h1><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p><a target="_blank" rel="noopener" href="https://yezhengstat.github.io/CUTTag_tutorial/">Zheng Y et al (2020). Protocol.io</a></p>
-</div><div class="tags"></div><div class="post-nav"><a class="next" href="/2024/09/05/hello-world/">Hello World</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://example.com"/></form></div><div class="widget"><div class="author-info"><a class="info-avatar" href="/about/" title="About"><img class="nofancybox" src="/img/avatar.png"/></a><p>To be a better man.</p><a class="info-icon" href="https://twitter.com/username" title="Twitter" target="_blank" style="margin-inline:5px"> <i class="fa fa-twitter-square" style="margin-inline:5px"></i></a><a class="info-icon" href="mailto:admin@domain.com" title="Email" target="_blank" style="margin-inline:5px"> <i class="fa fa-envelope-square" style="margin-inline:5px"></i></a><a class="info-icon" href="https://github.com/username" title="Github" target="_blank" style="margin-inline:5px"> <i class="fa fa-github-square" style="margin-inline:5px"></i></a><a class="info-icon" href="/atom.xml" title="RSS" target="_blank" style="margin-inline:5px"> <i class="fa fa-rss-square" style="margin-inline:5px"></i></a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/05/Cuttag-Tutorial-Tutorial/">Cuttag Tutorial Tutorial</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/05/hello-world/">Hello World</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 <a href="/." rel="nofollow">本店今天不营业.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2024/09/11/Basic-Algorithms/">Basic-Algorithms</a><a class="next" href="/2024/09/05/hello-world/">Hello World</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://example.com"/></form></div><div class="widget"><div class="author-info"><a class="info-avatar" href="/about/" title="About"><img class="nofancybox" src="/img/avatar.png"/></a><p>To be a better man.</p><a class="info-icon" href="https://twitter.com/username" title="Twitter" target="_blank" style="margin-inline:5px"> <i class="fa fa-twitter-square" style="margin-inline:5px"></i></a><a class="info-icon" href="mailto:admin@domain.com" title="Email" target="_blank" style="margin-inline:5px"> <i class="fa fa-envelope-square" style="margin-inline:5px"></i></a><a class="info-icon" href="https://github.com/username" title="Github" target="_blank" style="margin-inline:5px"> <i class="fa fa-github-square" style="margin-inline:5px"></i></a><a class="info-icon" href="/atom.xml" title="RSS" target="_blank" style="margin-inline:5px"> <i class="fa fa-rss-square" style="margin-inline:5px"></i></a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/11/Basic-Algorithms/">Basic-Algorithms</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/05/Cuttag-Tutorial-Tutorial/">Cuttag Tutorial Tutorial</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/05/hello-world/">Hello World</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 <a href="/." rel="nofollow">本店今天不营业.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="Copy Successed!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
